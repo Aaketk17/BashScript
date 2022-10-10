@@ -8,7 +8,7 @@ do
         m) masterIP=${OPTARG};;
         e) extraNode1=${OPTARG};;
         d) extraNode2=${OPTARG};;
-	      f) extraNode3=${OPTARG};;
+	f) extraNode3=${OPTARG};;
         s) nodeName=${OPTARG};;
     esac
 done
