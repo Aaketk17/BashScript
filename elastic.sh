@@ -49,4 +49,5 @@ then
 	sudo cat /etc/elasticsearch/elasticsearch.yml
 else
 	echo "Master IP and Network IP not present"
+	sudo cat /etc/elasticsearch/elasticsearch.yml
 fi
