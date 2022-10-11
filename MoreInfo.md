@@ -13,3 +13,7 @@
 ## Fuzzy query
 > https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-fuzzy-query.html
 > https://medium.com/@saurabhpakhare/elasticsearch-wildcard-fuzzy-query-7f435ab81ec7
+
+## Introduction to Elasticsearch workshop by LisaHJung - Senior Developer Advocate Elasticsearch
+> https://www.youtube.com/playlist?list=PL_mJOmq4zsHZYAyK606y7wjQtC0aoE6Es  -  Video playlist of the workshop 5 Parts
+> https://github.com/LisaHJung/Beginners-Crash-Course-to-Elastic-Stack-Series-Table-of-Contents  -  Contains docuementation of the above workshop
