@@ -3,6 +3,10 @@
 ## Suggesters
 > https://taranjeet.medium.com/elasticsearch-building-autocomplete-functionality-494fcf81a7cf
 > https://taranjeet.medium.com/elasticsearch-using-completion-suggester-to-build-autocomplete-e9c120cf6d87
+> https://www.youtube.com/watch?v=PQGlhbf7o7c&t=727s
+
+## Aggregations
+> https://www.elastic.co/guide/en/elasticsearch/reference/8.4/search-aggregations.html
 
 ## Text analysis - more info
 > https://www.elastic.co/guide/en/elasticsearch/reference/8.4/analysis.html
