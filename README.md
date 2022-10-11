@@ -413,3 +413,277 @@ GET news_headlines/_search
 > - Boosts can also be applied to phrases or to groups:
     `"john smith"^2   (foo bar)^4`
 
+#### Combined Queries
+
+There will be times when a user asks a multi-faceted question that requires multiple queries to answer.
+
+- This search is actually a combination of three queries:
+  - Query headlines that contain the search terms "Michelle Obama" in the field headline.
+  - Query "Michelle Obama" headlines from the "POLITICS" category.
+  - Query "Michelle Obama" headlines published before the year 2016
+
+With the bool query, you can combine multiple queries into one request and further specify boolean clauses to narrow down your search results.
+
+- There are four clauses to choose from:
+  - must
+  - must_not
+  - should
+  - filter
+  
+### S11: Syntax - Executing multiple queries in bool query
+
+```yaml
+GET name_of_index/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {One or more queries can be specified here. A document MUST match all of these queries to be considered as a hit.}
+      ],
+      "must_not": [
+        {A document must NOT match any of the queries specified here. It it does, it is excluded from the search results.}
+      ],
+      "should": [
+        {A document does not have to match any queries specified here. However, it if it does match, this document is given a higher score.}
+      ],
+      "filter": [
+        {These filters(queries) place documents in either yes or no category. Ones that fall into the yes category are included in the hits. }
+      ]
+    }
+  }
+}
+```
+### S12: `must` clause in Bool query
+> - The must clause defines all queries(criteria) a document MUST match to be returned as hits. These criteria are expressed in the form of one or multiple queries.
+
+> - All queries in the must clause must be satisfied for a document to be returned as a hit. As a result, having more queries in the must clause will increase the precision of your query.
+
+Syntax:
+
+```yaml
+GET Enter_name_of_the_index_here/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "Enter match or match_phrase here": {
+          "Enter the name of the field": "Enter the value you are looking for" 
+         }
+        },
+        {
+          "Enter match or match_phrase here": {
+            "Enter the name of the field": "Enter the value you are looking for" 
+          }
+        }
+      ]
+    }
+  }
+}
+```
+Example
+
+```yaml
+GET news_headlines/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "match_phrase": {
+          "headline": "Michelle Obama"
+         }
+        },
+        {
+          "match": {
+            "category": "POLITICS"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+### S13: `must_not` clause in Bool query
+> The must_not clause defines queries(criteria) a document MUST NOT match to be included in the search results.
+
+Syntax:
+
+```yaml
+GET Enter_name_of_the_index_here/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "Enter match or match_phrase here": {
+          "Enter the name of the field": "Enter the value you are looking for" 
+         }
+        },
+       "must_not":[
+         {
+          "Enter match or match_phrase here": {
+            "Enter the name of the field": "Enter the value you are looking for"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+Example:
+
+```yaml
+GET news_headlines/_search
+{
+  "query": {
+    "bool": {
+      "must": {
+        "match_phrase": {
+          "headline": "Michelle Obama"
+         }
+        },
+       "must_not":[
+         {
+          "match": {
+            "category": "WEDDINGS"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+### S13: `should` clause in Bool query
+
+> The should clause adds "nice to have" queries(criteria). The documents do not need to match the "nice to have" queries to be considered as hits.         However, the ones that do will be given a **higher score** so it shows up higher in the search results.
+
+Syntax:
+
+```yaml
+GET Enter_name_of_the_index_here/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "Enter match or match_phrase here: {
+          "Enter the name of the field": "Enter the value you are looking for" 
+         }
+        },
+       "should":[
+         {
+          "Enter match or match_phrase here": {
+            "Enter the name of the field": "Enter the value you are looking for"
+          }
+        }
+      ]
+    }
+  }
+```
+
+Example:
+
+> user may be looking up "Michelle Obama" in the context of "BLACK VOICES" category rather than in the context of "WEDDINGS", "TASTE", or "STYLE"         categories.
+
+```yaml
+GET news_headlines/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "match_phrase": {
+          "headline": "Michelle Obama"
+          }
+         }
+        ],
+       "should":[
+         {
+          "match_phrase": {
+            "category": "BLACK VOICES"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+> The documents with the phrase "BLACK VOICES" in the field category are now presented at the top of the search results.
+
+### S14: `filter` clause in Bool query
+
+> The filter clause contains filter queries that place documents into either "yes" or "no" category.
+
+Syntax:
+
+```yaml
+GET Enter_name_of_the_index_here/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "Enter match or match_phrase here": {
+          "Enter the name of the field": "Enter the value you are looking for" 
+         }
+        }
+        ],
+       "filter":{
+          "range":{
+             "date": {
+               "gte": "Enter lowest value of the range here",
+               "lte": "Enter highest value of the range here"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Example 1 - `range`:
+
+```yaml
+GET news_headlines/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+        "match_phrase": {
+          "headline": "Michelle Obama"
+          }
+         }
+        ],
+       "filter":{
+          "range":{
+             "date": {
+               "gte": "2014-03-25",
+               "lte": "2016-03-25"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Example 2 - `term`:
+```yaml
+.......code
+```
+
+Example 3 - `terms`:
+```yaml
+.......code
+```
+
+#### Fine-tuning the relevance of bool queries
+> There are many ways you can fine-tune the relevance of bool queries. One of the ways is to add multiple queries under the should clause.
+
+#### Adding multiple queries under the should clause
+
+> This approach ensures that you maintain a high recall but also offers a way to present more precise search results at the top of your search results.
+
