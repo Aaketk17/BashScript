@@ -669,15 +669,89 @@ GET news_headlines/_search
   }
 }
 ```
+Add some more values into produce_index
+
+```yaml
+POST produce_index/_doc
+{
+  "name": "Papaw",
+  "botanical_name": "Harum Manis",
+  "produce_type": "Fruit",
+  "country_of_origin": "India",
+  "organic": true,
+  "date_purchased": "2020-05-02T07:15:35",
+  "quantity": 500,
+  "unit_price": 1.5,
+  "description": "Mango Arumanis or Harum Manis is originated from East Java. Arumanis means harum dan manis or fragrant and sweet just like its taste.  The ripe Mango Arumanis has dark green skin coated with thin grayish natural wax. The flesh is deep yellow, thick, and soft with little to no fiber. Mango Arumanis is best eaten when ripe.",
+  "vendor_details": {
+    "vendor": "Dhoni",
+    "main_contact": "Suharto",
+    "vendor_location": "Chennai, India",
+    "preferred_vendor": true
+  }
+}
+
+```
+
+```yaml
+POST produce_index/_doc
+{
+  "name": "Coconut",
+  "botanical_name": "Harum Manis",
+  "produce_type": "Fruit",
+  "country_of_origin": "Srilanka",
+  "organic": false,
+  "date_purchased": "2020-05-02T07:15:35",
+  "quantity": 500,
+  "unit_price": 1.5,
+  "description": "Mango Arumanis or Harum Manis is originated from East Java. Arumanis means harum dan manis or fragrant and sweet just like its taste. The ripe Mango Arumanis has dark green skin coated with thin grayish natural wax. The flesh is deep yellow, thick, and soft with little to no fiber. Mango Arumanis is best eaten when ripe.",
+  "vendor_details": {
+    "vendor": "Athavan",
+    "main_contact": "Suharto",
+    "vendor_location": "Jaffna, Srilanka",
+    "preferred_vendor": true
+  }
+}
+```
+>Check for term filter with and without `must`, `should` clauses 
 
 Example 2 - `term`:
 ```yaml
-.......code
+GET produce_index/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "country_of_origin.keyword": "Srilanka"
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
 Example 3 - `terms`:
 ```yaml
-.......code
+GET produce_index/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "terms": {
+            "country_of_origin.keyword": [
+              "India",
+              "Srilanka"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
 ```
 
 #### Fine-tuning the relevance of bool queries
@@ -687,3 +761,44 @@ Example 3 - `terms`:
 
 > This approach ensures that you maintain a high recall but also offers a way to present more precise search results at the top of your search results.
 
+Let's say you want to run a search for news headlines with the phrase "Michelle Obama" in the field headline. But you want to favor articles that mention her biography "Becoming", and terms like "women" and "empower".
+
+To do this, you can add multiple queries to the should clause.
+
+This will cast a wider net because none of the queries in the should clause need to match. However, the ones that match the queries under the should clause will be given a higher score and placed higher in the search results.
+
+This approach allows you to maintain a high recall but also gives you a way to customize the precision of top hits.
+
+```yaml
+GET news_headlines/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_phrase": {
+            "headline": "Michelle Obama"
+          }
+        }
+      ],
+      "should": [
+        {
+          "match": {
+            "headline": "Becoming"
+          }
+        },
+        {
+          "match": {
+            "headline": "women"
+          }
+        },
+        {
+          "match": {
+            "headline": "empower"
+          }
+        }
+      ]
+    }
+  }
+}
+```
