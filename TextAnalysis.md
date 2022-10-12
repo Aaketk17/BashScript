@@ -55,6 +55,9 @@ A character filter receives the original text as a stream of characters and can 
   }
  ```
  3. **Pattern Replace Character Filter**
+ 
+ In this example, we configure the pattern_replace character filter to replace any embedded dashes in numbers with underscores, i.e 123-456-789 → 123_456_789:
+ 
  ```yaml
 GET /_analyze
 {
@@ -67,6 +70,8 @@ GET /_analyze
    "text": "My credit card is 123-456-789"
  }
  ```
+ > ### Result
+ > [ My, credit, card, is, 123_456_789 ]
 
 An analyzer may have zero or more character filters, which are applied in order.
   
