@@ -139,6 +139,8 @@ When the built-in analyzers do not fulfill your needs, you can create a custom a
  - a tokenizer
  - zero or more token filters.
  
+ > For custom analyzers, use a type of custom or omit the type parameter.
+ 
  ## Example 01
  
 Character Filter
@@ -184,7 +186,7 @@ Token Filters
  
 The previous example used tokenizer, token filters, and character filters with their default configurations, but it is possible to create configured versions of each and to use them in a custom analyzer.
  
-  ## complicated Example 02
+  ## Example 02
  
 Character Filter
  - Mapping Character Filter, configured to replace :) with _happy_ and :( with _sad_
